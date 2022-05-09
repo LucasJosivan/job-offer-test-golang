@@ -27,16 +27,11 @@ func (p People) Swap(i, j int) {
 }
 
 func SortCsvColumns(csvData string) string {
-	people := strings.Split(csvData, "\n")
-	var names []string
-	var firstValue []string
-	var secondValue []string
+	lines := strings.Split(csvData, "\n")
+	names := strings.Split(lines[0], ",")
+	firstValue := strings.Split(lines[1], ",")
+	secondValue := strings.Split(lines[2], ",")
 	var pList = People{}
-	for i := 0; i < len(people); i++ {
-		names = strings.Split(people[0], ",")
-		firstValue = strings.Split(people[1], ",")
-		secondValue = strings.Split(people[2], ",")
-	}
 	for i := 0; i < len(names); i++ {
 		pList = append(pList, Person{
 			Name:        names[i],
@@ -45,41 +40,29 @@ func SortCsvColumns(csvData string) string {
 		})
 	}
 	sort.Sort(People(pList))
-	result := pList.rangeName()
-	result += pList.rangeFirstValue()
-	result += pList.rangeSecondValue()
+	result := fmt.Sprintf(strings.Join(pList.rangeName(), ",") + "\n")
+	result += fmt.Sprintf(strings.Join(pList.rangeFirstValue(), ",") + "\n")
+	result += fmt.Sprint(strings.Join(pList.rangeSecondValue(), ","))
 	return result
 }
 
-func (p People) rangeName() (names string) {
-	for n, person := range p {
-		if (n + 1) == len(p) {
-			names += fmt.Sprintf("%v\n", person.Name)
-			return
-		}
-		names += fmt.Sprintf("%v,", person.Name)
+func (p People) rangeName() (names []string) {
+	for _, person := range p {
+		names = append(names, person.Name)
 	}
 	return
 }
 
-func (p People) rangeFirstValue() (values string) {
-	for n, person := range p {
-		if (n + 1) == len(p) {
-			values += fmt.Sprintf("%v\n", person.FistValue)
-			return
-		}
-		values += fmt.Sprintf("%v,", person.FistValue)
+func (p People) rangeFirstValue() (values []string) {
+	for _, person := range p {
+		values = append(values, person.FistValue)
 	}
 	return
 }
 
-func (p People) rangeSecondValue() (values string) {
-	for n, person := range p {
-		if (n + 1) == len(p) {
-			values += fmt.Sprintf("%v", person.SecondValue)
-			return
-		}
-		values += fmt.Sprintf("%v,", person.SecondValue)
+func (p People) rangeSecondValue() (values []string) {
+	for _, person := range p {
+		values = append(values, person.SecondValue)
 	}
 	return
 }
